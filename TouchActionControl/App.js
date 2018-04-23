@@ -18,7 +18,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stateID: "",
       moveX: 0,
       moveY: 0,
       x0: 0,
@@ -32,8 +31,8 @@ class App extends Component {
 
   componentWillMount() {
     this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: true,
-      onMoveShouldSetPanResponder: true,
+      onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
+      onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder,
       onPanResponderGrant: this.handlePanResponderGrant,
       onPanResponderMove: this.handlePanResponderMove,
       onPanResponderRelease: this.handlePanResponderEnd,
@@ -49,36 +48,74 @@ class App extends Component {
     }
   }
 
-  highlight() {
-
-  }
-
-  unHighlight() {
-    
-  }
-
-  componentDidMount() {
+  componentDidMount = () => {
     this.updatePosition();
   }
 
-  handlePanResponderGrant() {
+  handleStartShouldSetPanResponder = (event, gestureState) => {
+    return true;
+  };
 
+  handleMoveShouldSetPanResponder = (event, gestureState) => {
+    return true;
+  };
+
+  updatePosition = () => {
+    this.circle && this.circle.setNativeProps(this.circleStyle)
   }
 
-  handlePanResponderMove() {
-
+  highlight = () => {
+    this.circle && this.circle.setNativeProps({
+      style: {
+        backgroundColor: "blue"
+      }
+    })
   }
 
-  handlePanResponderEnd() {
+  unHighlight = () => {
+    this.circle && this.circle.setNativeProps({
+      style: {
+        backgroundColor: "red"
+      }
+    })
+  }
 
+  handlePanResponderGrant = (e, gestureState) => {
+    this.highlight();
+  }
+
+  handlePanResponderMove = (e, gestureState) => {
+    this.setState({
+      stateID: gestureState.stateID,
+      moveX: gestureState.moveX,
+      moveY: gestureState.moveY,
+      x0: gestureState.x0,
+      y0: gestureState.y0,
+      dx: gestureState.dx,
+      dy: gestureState.dy,
+      vx: gestureState.vx,
+      vy: gestureState.vy
+    });
+    this.circleStyle.style.left = this.pLeft + gestureState.dx;
+    this.circleStyle.style.top = this.pTop + gestureState.dy;
+    this.updatePosition();
+  }
+
+  handlePanResponderEnd = (e, gestureState) => {
+    this.unHighlight();
+    this.pLeft += gestureState.dx;
+    this.pTop += gestureState.dy;
   }
 
   render() {
     return(
       <View style={styles.container}>
-        <View style={styles.circle}></View>
+        <View 
+          ref={(circle) => { this.circle = circle; }}
+          style={styles.circle}>
+        </View>
         <Text>
-
+          dx: {this.state.dx}, dy: {this.state.dy}, vx: {this.state.vx}, vy: {this.state.vy}
         </Text>
       </View>
     )
@@ -87,13 +124,13 @@ class App extends Component {
 
 const styles = StyleSheet.create({
   circle: {
-    width: 20,
-    height: 20,
+    width: 50,
+    height: 50,
     borderRadius: 20 / 2,
-    backgroundColor: red,
+    backgroundColor: "red",
     position: "absolute",
-    left: 0,
-    right: 0
+    left: 100,
+    top: 100
   },
   container: {
     flex: 1,
