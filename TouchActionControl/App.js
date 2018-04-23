@@ -49,8 +49,28 @@ class App extends Component {
     }
   }
 
+  highlight() {
+
+  }
+
+  unHighlight() {
+    
+  }
+
   componentDidMount() {
     this.updatePosition();
+  }
+
+  handlePanResponderGrant() {
+
+  }
+
+  handlePanResponderMove() {
+
+  }
+
+  handlePanResponderEnd() {
+
   }
 
   render() {
@@ -64,5 +84,21 @@ class App extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 20 / 2,
+    backgroundColor: red,
+    position: "absolute",
+    left: 0,
+    right: 0
+  },
+  container: {
+    flex: 1,
+    paddingTop: 64
+  }
+})
 
 export default App;
