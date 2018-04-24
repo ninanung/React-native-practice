@@ -42,13 +42,13 @@ class App extends Component {
     this.pTop = 80;
     this.circleStyle = {
       style: {
-        left: this._pLeft,
-        top: this._pTop
+        left: this.pLeft,
+        top: this.pTop
       }
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.updatePosition();
   }
 
@@ -112,7 +112,7 @@ class App extends Component {
       <View style={styles.container}>
         <View 
           ref={(circle) => { this.circle = circle; }}
-          style={styles.circle}>
+          style={styles.circle}{...this.panResponder.panHandlers}>
         </View>
         <Text>
           dx: {this.state.dx}, dy: {this.state.dy}, vx: {this.state.vx}, vy: {this.state.vy}
